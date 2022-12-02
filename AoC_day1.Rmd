@@ -1,0 +1,41 @@
+---
+title: "AoC_day_1"
+author: "Meghan Mokate"
+date: "12/1/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Data
+
+```{r cars}
+library(tidyverse)
+library(readr)
+
+file <- readLines("adventofcode.com:2022:day:1:input.txt")
+
+file[nchar(file)==0] <- "x"
+
+day_1 <- as_tibble(file) %>%
+  mutate(row_id=row_number(),
+         elf = ifelse(value == "x", row_id, NA),
+         value = str_replace_all(value, "x", ""),
+         value = as.numeric(value)) %>%
+  fill(elf, .direction = "up") %>%
+  filter(!is.na(value)) %>%
+  group_by(elf) %>%
+  summarise(value = sum(value)) 
+
+day_1_1 <- day_1 %>%
+  top_n(1)
+day_1_1
+
+day_1_2 <- day_1 %>%
+  top_n(3) 
+
+sum(day_1_2$value)
+
+```
