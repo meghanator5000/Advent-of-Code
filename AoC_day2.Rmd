@@ -1,0 +1,67 @@
+---
+title: "AoC_day2"
+author: "Meghan Mokate"
+date: "12/2/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r cars}
+library(tidyverse)
+
+file <- readLines("input_02.txt")
+
+df <- as_tibble(file) 
+df_1 <- separate(data = df, col = value, into = c("opponent", "self"))
+
+day_02 <- df_1 %>%
+  mutate(outcome = ifelse(opponent == "A" & self == "Y", "win",
+                          ifelse(opponent == "B" & self == "Z", "win",
+                                 ifelse(opponent == "C" & self == "X", "win",
+                                        ifelse(opponent == "A" & self == "Z", "lose",
+                                                                                       ifelse(opponent == "B" & self == "X", "lose",
+                                                                                              ifelse(opponent == "C" & self == "Y", "lose",
+                                                                                                     ifelse(opponent == "C" & self == "Y", "lose",
+                                                                                                            ifelse(opponent == "A" & self == "X", "draw",
+                                                                                                                   ifelse(opponent == "B" & self == "Y", "draw",
+                                                                                                                          ifelse(opponent == "C" & self == "Z", "draw", "error"))))))))))) %>%
+  mutate(score_1 = ifelse(outcome == "win", 6,
+                           ifelse(outcome == "lose", 0, 3))) %>%
+  mutate(score_2 = ifelse(self == "X", 1,
+                          ifelse(self == "Y", 2,
+                                 ifelse(self == "Z", 3,
+                                        1000)))) %>%
+  mutate(score = score_1 + score_2)
+    
+sum(day_02$score)
+```
+
+```{r cars}
+day_02_2 <- day_02 %>%
+  mutate(result = ifelse(self == "X", "lose",
+                         ifelse(self == "Y", "draw",
+                                ifelse(self == "Z", "win", "error")))) %>%
+  rename(coded_result = self) %>%
+  select(1,2,7) %>%
+  mutate(self = ifelse(opponent == "A" & coded_result == "Z", 2,
+                          ifelse(opponent == "B" & coded_result == "Z", 3,
+                                 ifelse(opponent == "C" & coded_result == "Z", 1,
+                                        ifelse(opponent == "A" & coded_result == "X", 3,
+                                                                                       ifelse(opponent == "B" & coded_result == "X", 1,
+                                                                                              ifelse(opponent == "C" & coded_result == "X", 2,
+                                                                                                     ifelse(opponent == "A" & coded_result == "Y", 1,
+                                                                                                            ifelse(opponent == "B" & coded_result == "Y", 2,
+                                                                                                                   ifelse(opponent == "C" & coded_result == "Y", 3, "error")))))))))) %>%
+  mutate(score_1 = ifelse(result == "win", 6,
+                           ifelse(result == "lose", 0, 3))) %>%
+  mutate(self = as.numeric(self)) %>%
+  mutate(score = score_1 + self)
+
+# 1 for Rock, 2 for Paper, and 3 for Scissors
+
+sum(day_02_2$score)
+
+```
