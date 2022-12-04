@@ -1,0 +1,55 @@
+---
+title: "AoC_day4"
+author: "Meghan Mokate"
+date: "12/4/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+
+file <- readLines("input_04.txt")
+
+day_4 <- as_tibble(file) %>%
+  mutate(group=row_number()) %>%
+  pivot_longer(cols = c(value),
+                      names_to = "name", 
+                      values_to = "value") %>%
+  select(-name) %>%
+  separate(value, c("elf_1", "elf_2"), ",") %>%
+  pivot_longer(cols = c(elf_1, elf_2),
+                      names_to = "name", 
+                      values_to = "value") %>%
+  separate(value, c("elf_1", "elf_2"), "-") %>%
+  rename(min = elf_1,
+         max = elf_2) %>%
+  mutate(min = as.numeric(min),
+         max = as.numeric(max)) %>%
+  pivot_wider(names_from = name,
+              values_from = c(min, max))
+  
+
+day_4_1 <- day_4   %>%
+  mutate(count = 
+           ifelse(min_elf_1 >= min_elf_2 & max_elf_1 <= max_elf_2, 1,
+         ifelse(min_elf_2 >= min_elf_1 & max_elf_2 <= max_elf_1, 1, 
+         0)))
+
+sum(day_4_1$count)
+
+```
+
+```{r}
+day_4_2 <- day_4 %>%
+  mutate(count = 
+           ifelse(min_elf_1 >= min_elf_2 & min_elf_1 <= max_elf_2, 1,
+                  ifelse(min_elf_2 >= min_elf_1 & min_elf_2 <= max_elf_1, 1,
+         0)))
+  
+sum(day_4_2$count)
+
+```
