@@ -1,0 +1,83 @@
+---
+title: "AoC_day03"
+author: "Meghan Mokate"
+date: "12/3/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+
+file <- readLines("input_03.txt") 
+
+df <- as_tibble(file) %>%
+  mutate(length =  nchar(value),
+         compartment_size = length/2,
+         comp_1 = substr(value, 1, compartment_size),
+         comp_2 = substr(value, (compartment_size+1), length),
+         rucksack= row_number()) %>%
+  select(-c(value, length, compartment_size)) %>%
+  pivot_longer(cols = c(comp_1, comp_2),
+                      names_to = "name", 
+                      values_to = "value") %>% 
+   mutate(value_cleaned = str_extract_all(value, "."), 
+          col2 = map_chr(value_cleaned, ~ str_c(sort(.x), collapse="")),
+          col3 = map_chr(value_cleaned, ~ str_c(unique(sort(.x)), collapse="")),
+          value_cleaned = NULL)%>%
+  select(-c(col2)) %>%
+  rename(value_cleaned = "col3") %>%
+  pivot_wider(names_from = name,
+              values_from = value_cleaned) %>%
+  fill(comp_1, .direction = "down") %>%
+  fill(comp_2, .direction = "up") %>%
+  select(-value) %>%
+  distinct() %>%
+  unite(values, c("comp_1", "comp_2"), sep = "") %>%
+  separate(values, into = paste0("to_", 1:48), 
+           extra = "warn", 
+           fill = "warn", 
+           remove = TRUE,
+           convert = FALSE,
+           sep = "") %>%
+  pivot_longer(cols = 2:49,
+                      names_to = "name", 
+                      values_to = "value") %>%
+  select(-name) %>%
+  filter(!is.na(value)) %>%
+  filter(value != "")  
+
+day_3_1 <- df %>%
+  group_by_all() %>%
+  filter(n()>1) %>%
+  ungroup() %>%
+  distinct()
+  
+
+letter = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A","B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z")
+
+letter <- as_tibble(letter) %>%
+  mutate(score=row_number())
+
+day_03_1_score <- left_join(day_3_1, letter, by = "value")
+  
+sum(day_03_1_score$score)
+```
+
+```{r}
+day_3_2 <- df_0 %>%
+  mutate(group = ifelse(rucksack %% 3 ==0, rucksack, NA)) %>%
+  fill(group, .direction = "up") %>%
+  select(-rucksack) %>%
+  group_by_all() %>%
+  filter(n()>2) %>%
+  ungroup() %>%
+  distinct()
+
+day_03_2_score <- left_join(day_3_2, letter, by = "value")
+  
+sum(day_03_2_score$score)
+```
