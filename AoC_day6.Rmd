@@ -1,0 +1,586 @@
+---
+title: "Aoc_day6"
+author: "Meghan Mokate"
+date: "12/6/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r }
+library(tidyverse)
+
+file <- readLines("input_06.txt") 
+
+df <- as_tibble(file) %>% 
+  separate(value, into = paste0(1:4095), 
+           extra = "warn", 
+           fill = "warn", 
+           remove = TRUE,
+           convert = FALSE,
+           sep = "") %>%
+  pivot_longer(cols = 1:4095,
+               names_to = "name",
+               values_to = "value") %>%
+  select(-c(name)) %>%
+  filter(value != "")
+```
+
+```{r}
+day_6 <- df %>%
+  mutate(spot = row_number()) %>%
+  mutate(one = value,
+         two = value,
+         three = value)
+
+for (i in seq(nrow(day_6))) {
+  if (i == 1) {
+    day_6$one[i] <- day_6$one
+  } else {
+    day_6$one[i] <- (day_6$value[i-1]) }
+}
+
+for (i in seq(nrow(day_6))) {
+  if (i == 1) {
+    day_6$two[i] <- day_6$two
+  } 
+  if (i == 2) {
+    day_6$two[i] <- day_6$two
+  } 
+  else {
+    day_6$two[i] <- (day_6$value[i-2]) }
+}
+
+for (i in seq(nrow(day_6))) {
+  if (i == 1) {
+    day_6$three[i] <- day_6$three
+  } 
+  if (i == 2) {
+    day_6$three[i] <- day_6$three
+  }
+  if (i == 3) {
+    day_6$three[i] <- day_6$three
+  }
+  else {
+    day_6$three[i] <- (day_6$value[i-3]) }
+}
+
+day_6_1 <- day_6 %>%
+  mutate(test = ifelse(value == one, "N",
+                       ifelse(value == two, "N",
+                              ifelse(value == three, "N", 
+                                     ifelse(three == two, "N",
+                       ifelse(one == two, "N",
+                              ifelse(one == three, "N",
+                                     "Y")))))))
+
+day_6_1 %>%
+  filter(test == "Y") 
+```
+
+# Inefficient - seeking out a better way! Works but is very tedious and not reproducible.
+```{r}
+day_6_0 <- df %>%
+  mutate(spot = row_number()) %>%
+  mutate(one = value,
+         two = value,
+         three = value,
+         four = value,
+         five = value,
+         six = value,
+         seven = value,
+         eight = value,
+         nine = value,
+         ten = value,
+         eleven = value,
+         twelve = value,
+         thirteen = value,
+         fourteen = value)
+
+for (i in seq(nrow(day_6_0))) {
+  if (i == 1) {
+    day_6_0$one[i] <- day_6_0$one
+  } else {
+    day_6_0$one[i] <- (day_6_0$value[i-1]) }
+}
+
+for (i in seq(nrow(day_6_0))) {
+  if (i == 1) {
+    day_6_0$two[i] <- day_6_0$two
+  } 
+  if (i == 2) {
+    day_6_0$two[i] <- day_6_0$two
+  } 
+  else {
+    day_6_0$two[i] <- (day_6_0$value[i-2]) }
+}
+
+for (i in seq(nrow(day_6_0))) {
+  if (i == 1) {
+    day_6_0$three[i] <- day_6_0$three
+  } 
+  if (i == 2) {
+    day_6_0$three[i] <- day_6_0$three
+  }
+  if (i == 3) {
+    day_6_0$three[i] <- day_6_0$three
+  }
+  else {
+    day_6_0$three[i] <- (day_6_0$value[i-3]) }
+}
+
+for (i in seq(nrow(day_6_0))) {
+  if (i == 1) {
+    day_6_0$four[i] <- day_6_0$four
+  } 
+  if (i == 2) {
+    day_6_0$four[i] <- day_6_0$four
+  }
+  if (i == 3) {
+    day_6_0$four[i] <- day_6_0$four
+  }
+  if (i == 4) {
+    day_6_0$four[i] <- day_6_0$four
+  }
+  else {
+    day_6_0$four[i] <- (day_6_0$value[i-4]) }
+}
+
+for (i in seq(nrow(day_6_0))) {
+  if (i == 1) {
+    day_6_0$five[i] <- day_6_0$five
+  } 
+  if (i == 2) {
+    day_6_0$five[i] <- day_6_0$five
+  }
+  if (i == 3) {
+    day_6_0$five[i] <- day_6_0$five
+  }
+  if (i == 4) {
+    day_6_0$five[i] <- day_6_0$five
+  }
+  if (i == 5) {
+    day_6_0$five[i] <- day_6_0$five
+  }
+  else {
+    day_6_0$five[i] <- (day_6_0$value[i-5]) }
+}
+
+for (i in seq(nrow(day_6_0))) {
+  if (i == 1) {
+    day_6_0$six[i] <- day_6_0$six
+  } 
+  if (i == 2) {
+    day_6_0$six[i] <- day_6_0$six
+  }
+  if (i == 3) {
+    day_6_0$six[i] <- day_6_0$six
+  }
+  if (i == 4) {
+    day_6_0$six[i] <- day_6_0$six
+  }
+  if (i == 5) {
+    day_6_0$six[i] <- day_6_0$six
+  }
+  if (i == 6) {
+    day_6_0$six[i] <- day_6_0$six
+  }
+  else {
+    day_6_0$six[i] <- (day_6_0$value[i-6]) }
+}
+
+for (i in seq(nrow(day_6_0))) {
+  if (i == 1) {
+    day_6_0$seven[i] <- day_6_0$seven
+  } 
+  if (i == 2) {
+    day_6_0$seven[i] <- day_6_0$seven
+  }
+  if (i == 3) {
+    day_6_0$seven[i] <- day_6_0$seven
+  }
+  if (i == 4) {
+    day_6_0$seven[i] <- day_6_0$seven
+  }
+  if (i == 5) {
+    day_6_0$seven[i] <- day_6_0$seven
+  }
+  if (i == 6) {
+    day_6_0$seven[i] <- day_6_0$seven
+  }
+  if (i == 7) {
+    day_6_0$seven[i] <- day_6_0$seven
+  }
+  else {
+    day_6_0$seven[i] <- (day_6_0$value[i-7]) }
+}
+
+for (i in seq(nrow(day_6_0))) {
+  if (i == 1) {
+    day_6_0$eight[i] <- day_6_0$eight
+  } 
+  if (i == 2) {
+    day_6_0$eight[i] <- day_6_0$eight
+  }
+  if (i == 3) {
+    day_6_0$eight[i] <- day_6_0$eight
+  }
+  if (i == 4) {
+    day_6_0$eight[i] <- day_6_0$eight
+  }
+  if (i == 5) {
+    day_6_0$eight[i] <- day_6_0$eight
+  }
+  if (i == 6) {
+    day_6_0$eight[i] <- day_6_0$eight
+  }
+  if (i == 7) {
+    day_6_0$eight[i] <- day_6_0$eight
+  }
+  if (i == 8) {
+    day_6_0$eight[i] <- day_6_0$eight
+  }
+  else {
+    day_6_0$eight[i] <- (day_6_0$value[i-8]) }
+}
+
+for (i in seq(nrow(day_6_0))) {
+  if (i == 1) {
+    day_6_0$nine[i] <- day_6_0$nine
+  } 
+  if (i == 2) {
+    day_6_0$nine[i] <- day_6_0$nine
+  }
+  if (i == 3) {
+    day_6_0$nine[i] <- day_6_0$nine
+  }
+  if (i == 4) {
+    day_6_0$nine[i] <- day_6_0$nine
+  }
+  if (i == 5) {
+    day_6_0$nine[i] <- day_6_0$nine
+  }
+  if (i == 6) {
+    day_6_0$nine[i] <- day_6_0$nine
+  }
+  if (i == 7) {
+    day_6_0$nine[i] <- day_6_0$nine
+  }
+  if (i == 8) {
+    day_6_0$nine[i] <- day_6_0$nine
+  }
+  if (i == 9) {
+    day_6_0$nine[i] <- day_6_0$nine
+  }
+  else {
+    day_6_0$nine[i] <- (day_6_0$value[i-9]) }
+}
+
+for (i in seq(nrow(day_6_0))) {
+  if (i == 1) {
+    day_6_0$ten[i] <- day_6_0$ten
+  } 
+  if (i == 2) {
+    day_6_0$ten[i] <- day_6_0$ten
+  }
+  if (i == 3) {
+    day_6_0$ten[i] <- day_6_0$ten
+  }
+  if (i == 4) {
+    day_6_0$ten[i] <- day_6_0$ten
+  }
+  if (i == 5) {
+    day_6_0$ten[i] <- day_6_0$ten
+  }
+  if (i == 6) {
+    day_6_0$ten[i] <- day_6_0$ten
+  }
+  if (i == 7) {
+    day_6_0$ten[i] <- day_6_0$ten
+  }
+  if (i == 8) {
+    day_6_0$ten[i] <- day_6_0$ten
+  }
+  if (i == 9) {
+    day_6_0$ten[i] <- day_6_0$ten
+  }
+  if (i == 10) {
+    day_6_0$ten[i] <- day_6_0$ten
+  }
+  else {
+    day_6_0$ten[i] <- (day_6_0$value[i-10]) }
+}
+
+for (i in seq(nrow(day_6_0))) {
+  if (i == 1) {
+    day_6_0$eleven[i] <- day_6_0$eleven
+  } 
+  if (i == 2) {
+    day_6_0$eleven[i] <- day_6_0$eleven
+  }
+  if (i == 3) {
+    day_6_0$eleven[i] <- day_6_0$eleven
+  }
+  if (i == 4) {
+    day_6_0$eleven[i] <- day_6_0$eleven
+  }
+  if (i == 5) {
+    day_6_0$eleven[i] <- day_6_0$eleven
+  }
+  if (i == 6) {
+    day_6_0$eleven[i] <- day_6_0$eleven
+  }
+  if (i == 7) {
+    day_6_0$eleven[i] <- day_6_0$eleven
+  }
+  if (i == 8) {
+    day_6_0$eleven[i] <- day_6_0$eleven
+  }
+  if (i == 9) {
+    day_6_0$eleven[i] <- day_6_0$eleven
+  }
+  if (i == 10) {
+    day_6_0$eleven[i] <- day_6_0$eleven
+  }
+  if (i == 11) {
+    day_6_0$eleven[i] <- day_6_0$eleven
+  }
+  else {
+    day_6_0$eleven[i] <- (day_6_0$value[i-11]) }
+}
+
+for (i in seq(nrow(day_6_0))) {
+  if (i == 1) {
+    day_6_0$twelve[i] <- day_6_0$twelve
+  } 
+  if (i == 2) {
+    day_6_0$twelve[i] <- day_6_0$twelve
+  }
+  if (i == 3) {
+    day_6_0$twelve[i] <- day_6_0$twelve
+  }
+  if (i == 4) {
+    day_6_0$twelve[i] <- day_6_0$twelve
+  }
+  if (i == 5) {
+    day_6_0$twelve[i] <- day_6_0$twelve
+  }
+  if (i == 6) {
+    day_6_0$twelve[i] <- day_6_0$twelve
+  }
+  if (i == 7) {
+    day_6_0$twelve[i] <- day_6_0$twelve
+  }
+  if (i == 8) {
+    day_6_0$twelve[i] <- day_6_0$twelve
+  }
+  if (i == 9) {
+    day_6_0$twelve[i] <- day_6_0$twelve
+  }
+  if (i == 10) {
+    day_6_0$twelve[i] <- day_6_0$twelve
+  }
+  if (i == 11) {
+    day_6_0$twelve[i] <- day_6_0$twelve
+  }
+  if (i == 12) {
+    day_6_0$twelve[i] <- day_6_0$twelve
+  }
+  else {
+    day_6_0$twelve[i] <- (day_6_0$value[i-12]) }
+}
+
+for (i in seq(nrow(day_6_0))) {
+  if (i == 1) {
+    day_6_0$thirteen[i] <- day_6_0$thirteen
+  } 
+  if (i == 2) {
+    day_6_0$thirteen[i] <- day_6_0$thirteen
+  }
+  if (i == 3) {
+    day_6_0$thirteen[i] <- day_6_0$thirteen
+  }
+  if (i == 4) {
+    day_6_0$thirteen[i] <- day_6_0$thirteen
+  }
+  if (i == 5) {
+    day_6_0$thirteen[i] <- day_6_0$thirteen
+  }
+  if (i == 6) {
+    day_6_0$thirteen[i] <- day_6_0$thirteen
+  }
+  if (i == 7) {
+    day_6_0$thirteen[i] <- day_6_0$thirteen
+  }
+  if (i == 8) {
+    day_6_0$thirteen[i] <- day_6_0$thirteen
+  }
+  if (i == 9) {
+    day_6_0$thirteen[i] <- day_6_0$thirteen
+  }
+  if (i == 10) {
+    day_6_0$thirteen[i] <- day_6_0$thirteen
+  }
+  if (i == 11) {
+    day_6_0$thirteen[i] <- day_6_0$thirteen
+  }
+  if (i == 12) {
+    day_6_0$thirteen[i] <- day_6_0$thirteen
+  }
+  if (i == 13) {
+    day_6_0$thirteen[i] <- day_6_0$thirteen
+  }
+  else {
+    day_6_0$thirteen[i] <- (day_6_0$value[i-13]) }
+}
+
+for (i in seq(nrow(day_6_0))) {
+  if (i == 1) {
+    day_6_0$fourteen[i] <- day_6_0$fourteen
+  } 
+  if (i == 2) {
+    day_6_0$fourteen[i] <- day_6_0$fourteen
+  }
+  if (i == 3) {
+    day_6_0$fourteen[i] <- day_6_0$fourteen
+  }
+  if (i == 4) {
+    day_6_0$fourteen[i] <- day_6_0$fourteen
+  }
+  if (i == 5) {
+    day_6_0$fourteen[i] <- day_6_0$fourteen
+  }
+  if (i == 6) {
+    day_6_0$fourteen[i] <- day_6_0$fourteen
+  }
+  if (i == 7) {
+    day_6_0$fourteen[i] <- day_6_0$fourteen
+  }
+  if (i == 8) {
+    day_6_0$fourteen[i] <- day_6_0$fourteen
+  }
+  if (i == 9) {
+    day_6_0$fourteen[i] <- day_6_0$fourteen
+  }
+  if (i == 10) {
+    day_6_0$fourteen[i] <- day_6_0$fourteen
+  }
+  if (i == 11) {
+    day_6_0$fourteen[i] <- day_6_0$fourteen
+  }
+  if (i == 12) {
+    day_6_0$fourteen[i] <- day_6_0$fourteen
+  }
+  if (i == 13) {
+    day_6_0$fourteen[i] <- day_6_0$fourteen
+  }
+  if (i == 14) {
+    day_6_0$fourteen[i] <- day_6_0$fourteen
+  }
+  else {
+    day_6_0$fourteen[i] <- (day_6_0$value[i-14]) }
+}
+
+
+day_6_2 <- day_6_0 %>%
+  mutate(test = ifelse(one != value &
+                         one != two &
+                         one!= three &
+                         one != four &
+                         one != five &
+                         one != six &
+                         one != seven &
+                         one != eight &
+                         one != nine &
+                         one != ten &
+                         one != eleven &
+                         one != twelve &
+                         one != thirteen &
+                         one != fourteen &
+                         two != three &
+                         two != four &
+                         two != five &
+                         two != six &
+                         two != seven &
+                         two != eight &
+                         two != nine &
+                         two != ten &
+                         two != eleven &
+                         two != twelve &
+                         two != thirteen &
+                         two != fourteen &
+                         three != four &
+                         three != five &
+                         three != six &
+                         three != seven &
+                         three != eight &
+                         three != nine &
+                         three != ten &
+                         three != eleven &
+                         three != twelve &
+                         three != thirteen &
+                         three != fourteen &
+                         four != five &
+                         four != six &
+                         four != seven &
+                         four != eight &
+                         four != nine &
+                         four != ten &
+                         four != eleven &
+                         four != twelve &
+                         four != thirteen &
+                         four != fourteen &
+                         five != six &
+                         five != seven &
+                         five != eight &
+                         five != nine &
+                         five != ten &
+                         five != eleven &
+                         five != twelve &
+                         five != thirteen &
+                         five != fourteen &
+                         six != seven &
+                         six != eight &
+                         six != nine &
+                         six != ten &
+                         six != eleven &
+                         six != twelve &
+                         six != thirteen &
+                         six != fourteen &
+                         seven != eight &
+                         seven != nine &
+                         seven != ten &
+                         seven != eleven &
+                         seven != twelve &
+                         seven != thirteen &
+                         seven != fourteen &
+                         eight != nine &
+                         eight != ten &
+                         eight != eleven &
+                         eight != twelve &
+                         eight != thirteen &
+                         eight != fourteen &
+                         nine != ten &
+                         nine != eleven &
+                         nine != twelve &
+                         nine != thirteen &
+                         nine != fourteen &
+                         ten != eleven &
+                         ten != twelve &
+                         ten != thirteen &
+                         ten != fourteen &
+                         eleven != twelve &
+                         eleven != thirteen &
+                         eleven != fourteen &
+                         twelve != thirteen &
+                         twelve != fourteen &
+                         thirteen != fourteen, "Y", "N"))
+                       
+day_6_2 %>%
+  filter(test == "Y") 
+
+# 2261 - 1 = 2260
+
+```

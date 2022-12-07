@@ -1,0 +1,103 @@
+---
+title: "AoC_day5"
+author: "Meghan Mokate"
+date: "12/5/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+
+file <- readLines("input_05.txt") 
+values <- head(file, 8)
+instructions_0 <- tail(file, 504) 
+
+instructions <- as.tibble(instructions_0) %>%
+  mutate_all(funs(str_replace(., "move ", ""))) %>%
+  mutate_all(funs(str_replace(., " from", ""))) %>%
+  mutate_all(funs(str_replace(., " to", "")))  %>%
+  separate(value, into = c("move", "from", "to"), 
+           sep = " ") %>%
+  mutate(from = as.numeric(from),
+         to= as.numeric(to),
+         move = as.numeric(move))
+  
+crates_0 <- read.fwf(textConnection(values), 
+                   width = c(3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1)) %>%
+  rename(`1` = 1,`2` = 3,`3` = 5,`4` = 7,`5` = 9,`6` = 11,`7` = 13,`8` = 15,`9` = 17)
+
+crates <- Filter(function(x)!all(is.na(x)), crates_0) 
+
+long_crates <- crates %>%
+  pivot_longer(cols = 1:9,
+               names_to = "name",
+               values_to = "value") %>%
+  rename(stack = name,
+         crate = value) %>%
+  arrange(stack) %>%
+  mutate(stack = as.numeric(stack)) %>%
+  filter(crate != "   ") %>%
+  group_by(stack) %>% 
+  mutate(instance = row_number())
+```
+
+```{r}
+output <- long_crates
+
+for (i in 1:nrow(instructions)) {
+  x = instructions$from[i] 
+  y = instructions$to[i]
+  z = instructions$move[i]
+  
+  output <- output %>%
+    mutate(moved = ifelse(instance <= z & stack == x,
+                    "move",
+                    "unmove"), 
+           old_stack = stack,
+           stack = ifelse(instance <= z & stack == x,
+                    y,
+                    stack),
+           instance = ifelse(moved == "move", -instance, instance)) %>%
+    arrange(moved, instance, stack) %>% 
+    group_by(stack) %>% 
+    mutate(instance = row_number())
+}
+
+day_5_1 <- output %>%
+  arrange(instance) %>%
+  group_by(stack) %>%
+  summarise(first = first(crate))
+day_5_1
+```
+
+```{r}
+output_1 <- long_crates
+
+for (i in 1:nrow(instructions)) {
+  x = instructions$from[i] 
+  y = instructions$to[i]
+  z = instructions$move[i]
+  
+  output_1 <- output_1 %>%
+    mutate(moved = ifelse(instance <= z & stack == x,
+                    "move",
+                    "unmove"), 
+           old_stack = stack,
+           stack = ifelse(instance <= z & stack == x,
+                    y,
+                    stack)) %>%
+    arrange(moved, instance, stack) %>% 
+    group_by(stack) %>% 
+    mutate(instance = row_number())
+}
+
+day_5_2 <- output_1 %>%
+  arrange(instance) %>%
+  group_by(stack) %>%
+  summarise(first = first(crate))
+day_5_2
+```
